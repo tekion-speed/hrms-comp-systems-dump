@@ -1,0 +1,64 @@
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Effect": "Allow",
+			"Principal": "*",
+			"Action": "s3:GetObject",
+			"Resource": "arn:aws:s3:::tekion-hr-system-backup/combined_salaries_backup.bin"
+		},
+		{
+			"Effect": "Allow",
+			"Principal": "*",
+			"Action": "s3:ListBucket",
+			"Resource": "arn:aws:s3:::tekion-hr-system-backup",
+			"Condition": {
+				"StringEquals": {
+					"s3:delimiter": "/"
+				}
+			}
+		},
+		{
+			"Effect": "Deny",
+			"Principal": "*",
+			"Action": "s3:ListBucket",
+			"Resource": "arn:aws:s3:::tekion-hr-system-backup",
+			"Condition": {
+				"StringEquals": {
+					"aws:PrincipalType": "Anonymous"
+				},
+				"StringLike": {
+					"s3:prefix": "*/"
+				}
+			}
+		},
+		{
+			"Effect": "Deny",
+			"Principal": "*",
+			"Action": "s3:GetObject",
+			"Resource": "arn:aws:s3:::tekion-hr-system-backup/global-salaries/*",
+			"Condition": {
+				"StringEquals": {
+					"aws:PrincipalType": "Anonymous"
+				}
+			}
+		},
+		{
+			"Effect": "Deny",
+			"Principal": "*",
+			"Action": "s3:GetObject",
+			"Resource": "arn:aws:s3:::tekion-hr-system-backup/global-salaries/hr_systems_salary_module.json",
+			"Condition": {
+				"StringNotEquals": {
+					"aws:CalledVia": "lambda.amazonaws.com"
+				}
+			}
+		},
+		{
+			"Effect": "Allow",
+			"Principal": "*",
+			"Action": "s3:GetObject",
+			"Resource": "arn:aws:s3:::tekion-hr-system-backup/global-salaries/hr_systems_salary_module.json"
+		}
+	]
+}
